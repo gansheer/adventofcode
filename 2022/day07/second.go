@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 )
 
-type CargoCrane struct {
-	crates map[string][]string
+type Data struct {
+	currentDir string
+	dirSizes   map[string]int64
 }
-type Move struct {
-	number string
-	source string
-	target string
-}
+
+const totalsize = int64(70000000)
+const minfreesize = int64(30000000)
 
 func main() {
 
@@ -45,116 +45,157 @@ func main() {
 }
 
 func doTheThing(fileScanner *bufio.Scanner) string {
-
-	var cargoCraneLines []string = []string{}
-	var cargoCrane CargoCrane
-
+	data := Data{currentDir: "", dirSizes: make(map[string]int64)}
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 		fmt.Println("********", line)
-		if len(line) != 0 {
-			cargoCraneLines = append(cargoCraneLines, line)
-			fmt.Println(cargoCraneLines)
-		} else {
-			fmt.Println("Generating cargo crane")
-			cargoCraneLines = reverseArray(cargoCraneLines)
-			fmt.Println(cargoCraneLines)
-			cargoCrane = initCargoCrane(cargoCraneLines)
-			fillCargoCrane(cargoCraneLines[1:], cargoCrane)
-			fmt.Println(cargoCrane)
-			print(cargoCrane)
-			break
+		switch string(line[0]) {
+		case "$":
+			exploitCommand(line, &data)
+		case "d":
+			exploitDir(line, &data)
+		default:
+			exploitFile(line, &data)
 		}
+		print(data)
 	}
-	fmt.Println("---> applyMoves")
-	for fileScanner.Scan() {
-		line := fileScanner.Text()
-		fmt.Println("%%%", line)
-		move := extractMove(line)
-		fmt.Println(move)
-		cargoCrane = applyMove(move, cargoCrane)
 
-	}
-	fmt.Println("---> final state")
-	fmt.Println(cargoCrane)
+	fmt.Println("---> nothing")
 
-	return computeResult(cargoCrane)
+	return strconv.FormatInt(computeResult(&data), 10)
 }
 
-func initCargoCrane(cargoCraneLines []string) CargoCrane {
-	fmt.Println("----> Initializing cargo crane")
-	var cargoCrane = CargoCrane{crates: make(map[string][]string)}
-	initLine := cargoCraneLines[0]
-	fmt.Println(initLine)
-	numbers := strings.Split(initLine, "   ")
-	fmt.Println(numbers)
-	for _, number := range numbers {
-		fmt.Println(number)
-		cargoCrane.crates[strings.TrimSpace(number)] = []string{}
+func exploitCommand(line string, data *Data) {
+	fmt.Println("----> exploitCommand")
+	fmt.Println(line)
+	details := strings.Split(line, " ")
+	switch string(details[1]) {
+	case "ls":
+		fmt.Println("ls")
+	case "cd":
+		fmt.Println("cd", details[2])
+		executeCd(line, data)
+	default:
+		fmt.Println("unknown ERROR ERRROR ERRROR", details[1])
 	}
-	return cargoCrane
-
 }
 
-func fillCargoCrane(cargoCraneLines []string, cargoCrane CargoCrane) {
-	fmt.Println("----> fillCargoCrane")
-	for _, line := range cargoCraneLines {
-		fmt.Println(len(line), "|", line, "|")
-		for i := 0; i < len(line); i += 4 {
-			//fmt.Println("i ", i)
-			crate := line[i : i+3]
-			crateIndex := (i / 4) + 1
-			if len(strings.TrimSpace(crate)) != 0 {
-				cargoCrane.crates[strconv.Itoa(crateIndex)] = append(cargoCrane.crates[strconv.Itoa(crateIndex)], crate)
+func executeCd(line string, data *Data) {
+	details := strings.Split(line, " ")
+	switch string(details[2]) {
+	case "..":
+		fmt.Println("go to parent")
+		gotToParentDir(data)
+	case "/":
+		fmt.Println("go to root")
+		data.currentDir = "/"
+	default:
+		fmt.Println("go to child", details[2])
+		data.currentDir = data.currentDir + details[2] + "/"
+		// add current dir if not exists
+		//if _, ok := data.dirSizes[data.currentDir]; ok {
+		//nothinh to do something here
+		//} else {
+		//data.dirSizes[data.currentDir] = 0
+		//}
+	}
+}
+
+func gotToParentDir(data *Data) {
+	dirs := strings.Split(data.currentDir, "/")
+	//fmt.Println("BEFORE", data.currentDir)
+	data.currentDir = strings.Join(dirs[:len(dirs)-2], "/") + "/"
+	//fmt.Println("AFTER", data.currentDir)
+}
+
+func exploitDir(line string, data *Data) {
+	fmt.Println("----> exploitDir")
+	details := strings.Split(line, " ")
+	dirPath := data.currentDir + details[1] + "/"
+	if _, ok := data.dirSizes[dirPath]; ok {
+		//nothinh to do something here
+	} else {
+		data.dirSizes[dirPath] = 0
+	}
+
+	fmt.Println(line)
+}
+
+func exploitFile(line string, data *Data) {
+	fmt.Println("----> exploitFile")
+	details := strings.Split(line, " ")
+	filesize, _ := strconv.Atoi(details[0])
+	data.dirSizes[data.currentDir] = data.dirSizes[data.currentDir] + int64(filesize)
+	fmt.Println(line)
+}
+
+func computeResult(data *Data) int64 {
+	fmt.Println("----> computeResult")
+	fullDirs := make(map[string]int64)
+
+	for k, v := range data.dirSizes {
+		dirNode := k
+		// if not "/"
+		if len(dirNode) > 1 {
+			dirNode = path.Dir(dirNode)
+		}
+		fmt.Println(dirNode, v)
+
+		if _, ok := fullDirs[dirNode]; ok {
+			fullDirs[dirNode] = fullDirs[dirNode] + v
+		} else {
+			fullDirs[dirNode] = v
+		}
+
+		for dirNode != "/" {
+			dirNode = path.Dir(dirNode)
+			fmt.Println(dirNode)
+			if _, ok := fullDirs[dirNode]; ok {
+				fullDirs[dirNode] = fullDirs[dirNode] + v
+			} else {
+				fullDirs[dirNode] = v
 			}
 		}
+
 	}
-}
 
-func extractMove(line string) Move {
-	linesTo := strings.Split(line, "to")
-	linesFrom := strings.Split(linesTo[0], "from")
-	lines := strings.Split(linesFrom[0], "move")
-	return Move{number: strings.TrimSpace(lines[1]), source: strings.TrimSpace(linesFrom[1]), target: strings.TrimSpace(linesTo[1])}
+	fmt.Println("fulldirs")
+	usedsize := fullDirs["/"]
+	unusedsize := totalsize - fullDirs["/"]
+	targetunusedsize := minfreesize
+	targetfreenecessary := targetunusedsize - unusedsize
 
-}
+	fmt.Println("Used size :", usedsize)
+	fmt.Println("Unused size :", unusedsize)
+	fmt.Println("Target unused size :", targetunusedsize)
+	fmt.Println("To free size :", targetfreenecessary)
 
-func applyMove(move Move, cargoCrane CargoCrane) CargoCrane {
-	count, _ := strconv.Atoi(move.number)
-	crateSize := len(cargoCrane.crates[move.source])
-	objectsToMove := cargoCrane.crates[move.source][crateSize-count : crateSize]
-	fmt.Println(crateSize, count, objectsToMove)
-	fmt.Println(cargoCrane.crates[move.source])
-	fmt.Println(cargoCrane.crates[move.target])
+	dirToDelete := "/"
+	dirToDeleteSize := fullDirs["/"]
+	fmt.Println(dirToDelete, dirToDeleteSize)
+	for dir, dirSize := range fullDirs {
+		fmt.Println(dir, dirSize)
 
-	cargoCrane.crates[move.source] = cargoCrane.crates[move.source][0 : crateSize-count]
-	cargoCrane.crates[move.target] = append(cargoCrane.crates[move.target], objectsToMove...)
+		if dirSize > targetfreenecessary && dirSize < dirToDeleteSize {
+			dirToDelete = dir
+			dirToDeleteSize = dirSize
 
-	fmt.Println(cargoCrane)
-	return cargoCrane
+		}
 
-}
-
-func computeResult(cargoCrane CargoCrane) string {
-	results := []string{}
-	//fmt.Println(len(cargoCrane.crates))
-	for i := 1; i <= len(cargoCrane.crates); i++ {
-		crateIndex := strconv.Itoa(i)
-		fmt.Println(crateIndex, cargoCrane.crates[crateIndex])
-		crate := cargoCrane.crates[crateIndex][len(cargoCrane.crates[crateIndex])-1]
-		//fmt.Println(crate)
-		results = append(results, strings.TrimRight(strings.TrimLeft(crate, "["), "]"))
+		fmt.Println(dirToDelete, dirToDeleteSize)
 	}
-	return strings.Join(results, "")
+
+	return dirToDeleteSize
 }
 
-func print(cargoCrane CargoCrane) {
-	fmt.Println("************")
-	for i := 1; i <= len(cargoCrane.crates); i++ {
-		crateIndex := strconv.Itoa(i)
-		fmt.Println(crateIndex, cargoCrane.crates[crateIndex])
+func print(data Data) {
+	fmt.Println("------------")
+	for k, v := range data.dirSizes {
+		fmt.Println(k, v)
 	}
-	fmt.Println("************")
+	fmt.Println("---")
+	fmt.Println(data.currentDir)
+	fmt.Println("------------")
 }
 
 func atoi(s string) int {

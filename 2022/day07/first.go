@@ -128,19 +128,24 @@ func exploitFile(line string, data *Data) {
 }
 
 func computeResult(data *Data) int64 {
+	fmt.Println("----> computeResult")
 	var result int64 = 0
 	fullDirs := make(map[string]int64)
 
 	for k, v := range data.dirSizes {
 		dirNode := k
+		// if not "/"
+		if len(dirNode) > 1 {
+			dirNode = path.Dir(dirNode)
+		}
+		fmt.Println(dirNode, v)
+
 		if _, ok := fullDirs[dirNode]; ok {
 			fullDirs[dirNode] = fullDirs[dirNode] + v
 		} else {
 			fullDirs[dirNode] = v
 		}
-		if dirNode != "/" {
-			dirNode = string(dirNode[0 : len(dirNode)-1])
-		}
+
 		for dirNode != "/" {
 			dirNode = path.Dir(dirNode)
 			fmt.Println(dirNode)
