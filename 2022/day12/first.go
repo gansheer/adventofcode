@@ -14,12 +14,13 @@ type Data struct {
 	edges []Edge
 	maxX  int
 	maxY  int
+	start Vertex
+	end   Vertex
 }
 
 type Vertex struct {
-	x     int
-	y     int
-	value int
+	x int
+	y int
 }
 
 type Edge struct {
@@ -60,8 +61,15 @@ func doTheThing(fileScanner *bufio.Scanner) string {
 		line := fileScanner.Text()
 		fmt.Println(line)
 		for index, value := range line {
-			point := Vertex{x: index, y: counter, value: int(value)}
+			point := Vertex{x: index, y: counter}
 			data.input[point] = string(value)
+			if string(value) == "S" {
+				data.start = point
+			}
+			if string(value) == "E" {
+				data.end = point
+			}
+
 		}
 		data.maxX = len(line) - 1
 		counter += 1
@@ -71,10 +79,10 @@ func doTheThing(fileScanner *bufio.Scanner) string {
 	//fmt.Println(data)
 	print(&data)
 
-	displayAsciiValue("S")
-	displayAsciiValue("E")
-	displayAsciiValue("a")
-	displayAsciiValue("z")
+	//displayAsciiValue("S")
+	//displayAsciiValue("E")
+	//displayAsciiValue("a")
+	//displayAsciiValue("z")
 
 	fmt.Println("---> nothing")
 
@@ -88,7 +96,7 @@ func computeEdges(data *Data) {
 		if vertex.x > 0 {
 			targetMinusY := Vertex{x: vertex.x - 1, y: vertex.y}
 			targetValue := data.input[targetMinusY]
-			fmt.Println(targetValue, int(targetValue[0]), value, int(value[0]), math.Abs(float64(decodeIntValue(targetValue)-decodeIntValue(value))))
+			fmt.Println(value, targetValue)
 			if math.Abs(float64(decodeIntValue(targetValue)-decodeIntValue(value))) <= 1 {
 				edge := Edge{vertex, targetMinusY}
 				data.edges = append(data.edges, edge)
@@ -126,6 +134,7 @@ func computeEdges(data *Data) {
 }
 
 func decodeIntValue(valueStr string) int {
+	fmt.Println(valueStr)
 	if valueStr == "S" {
 		return 96
 	}
