@@ -2,10 +2,16 @@ package utils
 
 import (
 	"regexp"
+	"strconv"
 	"strings"
 
 	"golang.org/x/exp/maps"
 )
+
+func ToInt(input string) int {
+	result, _ := strconv.Atoi(input)
+	return result
+}
 
 func ExtractNumbers(input string) []string {
 	re := regexp.MustCompile("[0-9]")
