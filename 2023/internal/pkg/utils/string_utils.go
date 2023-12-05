@@ -13,6 +13,11 @@ func ToInt(input string) int {
 	return result
 }
 
+func IsNumber(input string) bool {
+	re := regexp.MustCompile("[0-9]")
+	return re.MatchString(input)
+}
+
 func ExtractNumbers(input string) []string {
 	re := regexp.MustCompile("[0-9]")
 	return re.FindAllString(input, -1)
