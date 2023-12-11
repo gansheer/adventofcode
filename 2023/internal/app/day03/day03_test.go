@@ -34,6 +34,6 @@ func TestComplexData(t *testing.T) {
 	result, err := computeComplex("testdata/data.txt")
 
 	assert.Nil(t, err)
-	assert.Equal(t, "0", result)
+	assert.Equal(t, "78826761", result)
 
 }
