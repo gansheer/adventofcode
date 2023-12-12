@@ -20,3 +20,15 @@ func containsGeneric[T comparable](b []T, e T) bool {
 	}
 	return false
 }
+
+func MinIntSlice(v []int) (m int) {
+	if len(v) > 0 {
+		m = v[0]
+	}
+	for i, e := range v {
+		if i == 0 || e < m {
+			m = e
+		}
+	}
+	return
+}

@@ -1,0 +1,180 @@
+{
+    "state": {
+        "NoUnkeyedLiterals": {},
+        "DoNotCompare": [],
+        "DoNotCopy": [],
+        "atomicMessageInfo": "nil"
+    },
+    "sizeCache": 0,
+    "unknownFields": "nil",
+    "Name": "camel_k_build_duration_seconds",
+    "Help": "Camel K build duration",
+    "Type": 4,
+    "Metric": [
+        {
+            "state": {
+                "NoUnkeyedLiterals": {},
+                "DoNotCompare": [],
+                "DoNotCopy": [],
+                "atomicMessageInfo": "nil"
+            },
+            "sizeCache": 0,
+            "unknownFields": "nil",
+            "Label": [
+                {
+                    "state": {
+                        "NoUnkeyedLiterals": {},
+                        "DoNotCompare": [],
+                        "DoNotCopy": [],
+                        "atomicMessageInfo": "nil"
+                    },
+                    "sizeCache": 0,
+                    "unknownFields": "nil",
+                    "Name": "result",
+                    "Value": "Succeeded"
+                },
+                {
+                    "state": {
+                        "NoUnkeyedLiterals": {},
+                        "DoNotCompare": [],
+                        "DoNotCopy": [],
+                        "atomicMessageInfo": "nil"
+                    },
+                    "sizeCache": 0,
+                    "unknownFields": "nil",
+                    "Name": "type",
+                    "Value": "fast-jar"
+                }
+            ],
+            "Gauge": "nil",
+            "Counter": "nil",
+            "Summary": "nil",
+            "Untyped": "nil",
+            "Histogram": {
+                "state": {
+                    "NoUnkeyedLiterals": {},
+                    "DoNotCompare": [],
+                    "DoNotCopy": [],
+                    "atomicMessageInfo": "nil"
+                },
+                "sizeCache": 0,
+                "unknownFields": "nil",
+                "SampleCount": 2,
+                "SampleCountFloat": "nil",
+                "SampleSum": 145.461178029,
+                "Bucket": [
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 1,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": 30,
+                        "Exemplar": "nil"
+                    },
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 1,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": 60,
+                        "Exemplar": "nil"
+                    },
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 1,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": 90,
+                        "Exemplar": "nil"
+                    },
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 1,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": 120,
+                        "Exemplar": "nil"
+                    },
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 2,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": 300,
+                        "Exemplar": "nil"
+                    },
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 2,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": 600,
+                        "Exemplar": "nil"
+                    },
+                    {
+                        "state": {
+                            "NoUnkeyedLiterals": {},
+                            "DoNotCompare": [],
+                            "DoNotCopy": [],
+                            "atomicMessageInfo": "nil"
+                        },
+                        "sizeCache": 0,
+                        "unknownFields": "nil",
+                        "CumulativeCount": 2,
+                        "CumulativeCountFloat": "nil",
+                        "UpperBound": "+Inf",
+                        "Exemplar": "nil"
+                    }
+                ],
+                "CreatedTimestamp": "nil",
+                "Schema": "nil",
+                "ZeroThreshold": "nil",
+                "ZeroCount": "nil",
+                "ZeroCountFloat": "nil",
+                "NegativeSpan": "nil",
+                "NegativeDelta": "nil",
+                "NegativeCount": "nil",
+                "PositiveSpan": "nil",
+                "PositiveDelta": "nil",
+                "PositiveCount": "nil"
+            },
+            "TimestampMs": "nil"
+        }
+    ]
+}
